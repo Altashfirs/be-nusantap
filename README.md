@@ -29,15 +29,15 @@ Backend lengkap untuk aplikasi **Nusantap** — platform donasi makanan berlebih
 ## Struktur Folder
 
 nusantap-api/
-├── config/           → Koneksi DB  
-├── controllers/      → Business logic  
-├── middlewares/      → Auth & error handler  
-├── models/           → Sequelize models  
-├── routes/           → Semua endpoint  
-├── .env.example  
-├── app.js  
-├── package.json  
-└── openapi.yaml      → Dokumentasi Swagger  
+├── config/           → Koneksi DB
+├── controllers/      → Business logic
+├── middlewares/      → Auth & error handler
+├── models/           → Sequelize models
+├── routes/           → Semua endpoint
+├── .env.example
+├── app.js
+├── package.json
+└── openapi.yaml      → Dokumentasi Swagger
 
 ## Cara Menjalankan Lokal
 
