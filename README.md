@@ -1,4 +1,3 @@
-```markdown
 # NUSANTAP API — Backend Resmi  
 **Platform Donasi Makanan & Dana Berbasis Node.js + MySQL**
 
@@ -28,7 +27,7 @@ Backend lengkap untuk aplikasi **Nusantap** — platform donasi makanan berlebih
 - dotenv, cors, helmet
 
 ## Struktur Folder
-```
+
 nusantap-api/
 ├── config/           → Koneksi DB
 ├── controllers/      → Business logic
@@ -39,7 +38,6 @@ nusantap-api/
 ├── app.js
 ├── package.json
 └── openapi.yaml      → Dokumentasi Swagger
-```
 
 ## Cara Menjalankan Lokal
 
