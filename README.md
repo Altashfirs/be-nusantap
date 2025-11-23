@@ -28,7 +28,7 @@ Backend lengkap untuk aplikasi **Nusantap** — platform donasi makanan berlebih
 
 ## Struktur Folder
 
-nusantap-api/
+nusantap-api/  
 ├── config/           → Koneksi DB  
 ├── controllers/      → Business logic  
 ├── middlewares/      → Auth & error handler  
