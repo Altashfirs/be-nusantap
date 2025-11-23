@@ -1,0 +1,271 @@
+openapi: 3.0.3
+info:
+  title: NUSANTAP API
+  description: Backend API untuk platform donasi makanan & dana NUSANTAP (lengkap dengan auth, role admin/staff/donor)
+  version: 1.0.0
+  contact:
+    name: Backend Team
+    email: dev@nusantap.org
+
+servers:
+  - url: http://localhost:3000/api
+    description: Local Development
+  - url: https://api.nusantap.org/api
+    description: Production
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        user_id: { type: integer }
+        full_name: { type: string }
+        email: { type: string }
+        phone: { type: string, nullable: true }
+        role: { type: string, enum: [admin, staff, donor] }
+        created_at: { type: string, format: date-time }
+
+    LoginResponse:
+      type: object
+      properties:
+        token: { type: string }
+        user: { $ref: '#/components/schemas/User' }
+
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+
+security:
+  - bearerAuth: []
+
+paths:
+  /auth/register:
+    post:
+      summary: Register user baru (bisa langsung jadi admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name: { type: string }
+                email: { type: string }
+                phone: { type: string, nullable: true }
+                password: { type: string, minLength: 6 }
+                role: { type: string, enum: [admin, staff, donor], default: donor }
+      responses:
+        '201': { description: Success, returns user }
+        '400': { $ref: '#/components/responses/BadRequest' }
+
+  /auth/login:
+    post:
+      summary: Login & dapatkan JWT token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LoginResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /blogs:
+    get:
+      summary: Ambil semua artikel/blog (public)
+      responses:
+        '200': { description: List blog articles }
+    post:
+      summary: Buat artikel baru (staff/admin only)
+      security: [bearerAuth: []]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                slug: { type: string }
+                content: { type: string }
+                cover_image: { type: string, nullable: true }
+                category: { type: string, enum: [news, article, blog] }
+                publish_date: { type: string, format: date }
+      responses:
+        '201': { description: Created }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /blogs/{id}:
+    get:
+      summary: Detail artikel (public)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Article detail }
+    put:
+      summary: Update artikel (staff/admin)
+      security: [bearerAuth: []]
+      parameters: [ { $ref: '#/paths/blogs/post/parameters/0' } ]
+      responses: { '200': { description: Updated } }
+    delete:
+      summary: Hapus artikel (staff/admin)
+      security: [bearerAuth: []]
+      responses: { '204': { description: Deleted } }
+
+  /contacts:
+    get:
+      summary: List semua pesan kontak (staff/admin only)
+      security: [bearerAuth: []]
+      responses: { '200': { description: List messages } }
+    post:
+      summary: Kirim pesan kontak (public)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string }
+                subject: { type: string }
+                message: { type: string }
+      responses: { '201': { description: Message sent } }
+
+  /contacts/{id}/read:
+    put:
+      summary: Tandai pesan sudah dibaca (staff/admin)
+      security: [bearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses: { '200': { description: Marked as read } }
+
+  /donations:
+    get:
+      summary: List semua donasi (admin only)
+      security: [bearerAuth: []]
+      responses: { '200': { description: List donations + items } }
+    post:
+      summary: Buat donasi baru (login required)
+      security: [bearerAuth: []]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                donate_type: { type: string, enum: [food, funds] }
+                donor_name: { type: string }
+                donor_email: { type: string }
+                donor_phone: { type: string }
+                donation_detail: { type: string, nullable: true }
+                delivery_method: { type: string, enum: [drop_off, pick_up, delivery_partner, none] }
+                dedication: { type: string, nullable: true }
+                anonymous: { type: boolean, default: false }
+                location_address: { type: string, nullable: true }
+                preferred_time: { type: string, nullable: true }
+                notes: { type: string, nullable: true }
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      item_name: { type: string }
+                      quantity: { type: integer }
+                      unit: { type: string }
+      responses: { '201': { description: Donation created } }
+
+  /donations/{id}:
+    get:
+      summary: Detail donasi (owner atau admin)
+      security: [bearerAuth: []]
+      responses: { '200': { description: Donation + items } }
+
+  /events:
+    get:
+      summary: List semua program/event (public)
+      responses: { '200': { description: List events } }
+    post:
+      summary: Tambah event (staff/admin)
+      security: [bearerAuth: []]
+      responses: { '201': { description: Created } }
+
+  /pages:
+    get:
+      summary: List semua halaman statis (public)
+      responses: { '200': { description: List pages } }
+  /pages/{slug}:
+    get:
+      summary: Ambil halaman berdasarkan slug (public)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses: { '200': { description: Page detail } }
+
+  /stats:
+    get:
+      summary: Ambil semua statistik (public)
+      responses: { '200': { description: List stats } }
+
+  /testimonials:
+    get:
+      summary: List semua testimoni (public)
+      responses: { '200': { description: List testimonials } }
+    post:
+      summary: Tambah testimoni (staff/admin)
+      security: [bearerAuth: []]
+      responses: { '201': { description: Created } }
+
+  /users:
+    get:
+      summary: List semua user (admin only)
+      security: [bearerAuth: []]
+      responses: { '200': { description: List users (no password) } }
+
+  /users/{id}:
+    put:
+      summary: Update profil sendiri atau user lain (admin)
+      security: [bearerAuth: []]
+      responses: { '200': { description: Updated } }
+
+components:
+  responses:
+    Unauthorized:
+      description: Token tidak ada / invalid
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Akses ditolak (role tidak cukup)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    BadRequest:
+      description: Validasi error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
