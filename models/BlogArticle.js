@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
     author_id: DataTypes.INTEGER,
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, onUpdate: DataTypes.NOW },
-  }, { tableName: 'blog_articles', timestamps: false });
+  });
 
   BlogArticle.associate = (models) => {
     BlogArticle.belongsTo(models.User, { foreignKey: 'author_id' });

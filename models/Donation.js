@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
     notes: DataTypes.TEXT,
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, onUpdate: DataTypes.NOW },
-  }, { tableName: 'donations', timestamps: false });
+  });
 
   Donation.associate = (models) => {
     Donation.belongsTo(models.User, { foreignKey: 'user_id' });

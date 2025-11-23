@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
     banner_image: DataTypes.STRING(255),
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, onUpdate: DataTypes.NOW },
-  }, { tableName: 'pages', timestamps: false });
+  });
 
   return Page;
 };

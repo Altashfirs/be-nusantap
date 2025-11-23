@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
     message: DataTypes.TEXT,
     is_read: { type: DataTypes.BOOLEAN, defaultValue: false },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  }, { tableName: 'contact_messages', timestamps: false });
+  });
 
   return ContactMessage;
 };

@@ -7,7 +7,7 @@ module.exports = (sequelize) => {
     item_name: { type: DataTypes.STRING(150), allowNull: false },
     quantity: DataTypes.INTEGER,
     unit: DataTypes.STRING(50),
-  }, { tableName: 'donation_items', timestamps: false });
+  });
 
   DonationItem.associate = (models) => {
     DonationItem.belongsTo(models.Donation, { foreignKey: 'donation_id' });

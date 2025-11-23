@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
     message: DataTypes.TEXT,
     profile_image: DataTypes.STRING(255),
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  }, { tableName: 'testimonials', timestamps: false });
+  });
 
   return Testimonial;
 };

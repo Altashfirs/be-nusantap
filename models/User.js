@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
     role: { type: DataTypes.ENUM('admin', 'donor', 'staff'), defaultValue: 'donor' },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     last_login: DataTypes.DATE,
-  }, { tableName: 'users', timestamps: false });
+  });
 
   User.associate = (models) => {
     User.hasMany(models.BlogArticle, { foreignKey: 'author_id', onDelete: 'SET NULL' });

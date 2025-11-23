@@ -6,7 +6,7 @@ module.exports = (sequelize) => {
     name: DataTypes.STRING(150),
     value: { type: DataTypes.INTEGER, defaultValue: 0 },
     updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  }, { tableName: 'stats', timestamps: false });
+  });
 
   return Stat;
 };

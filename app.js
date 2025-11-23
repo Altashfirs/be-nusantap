@@ -31,3 +31,9 @@ sequelize.authenticate().then(() => {
   sequelize.sync({ alter: true }); // For dev; use migrate in prod
   app.listen(process.env.PORT || 3000, () => console.log('Server on port 3000'));
 }).catch(err => console.error('DB error:', err));
+
+sequelize.authenticate()
+  .then(() => console.log('Database connected →', process.env.DATABASE_URL ? 'Neon (PostgreSQL)' : 'MySQL Lokal'))
+  .catch(err => console.error('DB Connection Error:', err));
+
+sequelize.sync({ alter: false }); // { alter: true } hanya di dev

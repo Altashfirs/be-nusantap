@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
     payment_method: DataTypes.STRING(50),
     payment_status: { type: DataTypes.ENUM('pending', 'paid', 'failed'), defaultValue: 'pending' },
     paid_at: DataTypes.DATE,
-  }, { tableName: 'funds_transactions', timestamps: false });
+  });
 
   FundsTransaction.associate = (models) => {
     FundsTransaction.belongsTo(models.Donation, { foreignKey: 'donation_id' });

@@ -7,7 +7,7 @@ module.exports = (sequelize) => {
     description: DataTypes.TEXT,
     image: DataTypes.STRING(255),
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  }, { tableName: 'event_programs', timestamps: false });
+  });
 
   return EventProgram;
 };
